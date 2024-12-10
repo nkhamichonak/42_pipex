@@ -6,51 +6,65 @@
 /*   By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 11:23:08 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/09 16:34:25 by nkhamich         ###   ########.fr       */
+/*   Updated: 2024/12/10 14:57:18 by nkhamich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 #include <stdio.h>
 
-void	error_exit(int num_error)
+void	error_exit(char *error_msg, int *fd)
 {
-	if (num_error == 1)
+	if (fd != NULL)
 	{
-		ft_putendl_fd("Error: Bad arguments.", 2);
-		ft_putendl_fd("Usage: ./pipex <file1> <cmd1> <cmd2> <file2>", 2);
+		close(fd[0]);
+		close(fd[1]);
 	}
+	ft_putstr_fd("Error: ", 2);
+	ft_putendl_fd(error_msg, 2);
 	exit(EXIT_FAILURE);
 }
 
-void	execute_child(char **argv, char **envp, int pipe_fd)
+void	execute_first_child(char **argv, char **envp, int fd)
 {
-	
+	int		infile;
+
+	infile = open(argv[1], O_RDONLY);
+	if (infile < 0)
+		error_exit(strerror(errno), fd);
 }
 
-void	execute_parent(char **argv, char **envp, int pipe_fd)
+void	execute_second_child(char **argv, char **envp, int fd)
 {
-	
+	int		outfile;
+
+	outfile = open(argv[4], O_TRUNC | O_CREAT | O_RDWR, 0644);
+	if (outfile < 0)
+		error_exit(strerror(errno), fd);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	int		pipe_fd[2];
-	pid_t	pid;
+	int		fd[2];
+	pid_t	pid1;
+	pid_t	pid2;
 	
 	if (argc != 5)
-		error_exit(1);
-	if (pipe(pipe_fd) == -1)
-		exit(EXIT_FAILURE);
-	pid = fork();
-	if (pid == -1)
-		exit(EXIT_FAILURE);
-	if (pid == 0)
-		execute_child(argv, envp, pipe_fd);
-	else
-	{
-		wait(NULL);
-		execute_parent(argv, envp, pipe_fd);
-	}
+		error_exit(ERR_ARGS, NULL);
+	if (pipe(fd) == -1)
+		error_exit(strerror(errno), NULL);
+	pid1 = fork();
+	if (pid1 == -1)
+		error_exit(strerror(errno), fd);
+	if (pid1 == 0)
+		execute_first_child(argv, envp, fd);
+	pid2 = fork();
+	if (pid2 == -1)
+		error_exit(strerror(errno), fd);
+	if (pid2 == 0)
+		execute_second_child(argv, envp, fd);
+	waitpid(pid1, NULL, 0);
+	waitpid(pid2, NULL, 0);
 	return (0);
 }
+
