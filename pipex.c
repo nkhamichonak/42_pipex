@@ -6,43 +6,12 @@
 /*   By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 11:23:08 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/11 12:26:17 by nkhamich         ###   ########.fr       */
+/*   Updated: 2024/12/11 15:26:02 by nkhamich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 #include <stdio.h>
-
-char	*get_path(char **envp)
-{
-	while (ft_strncmp(*envp, "PATH", 4))
-		envp++;
-	return (*envp + 5);
-}
-
-char	*get_command(char **paths, char	*to_find)
-{
-	char	*command_path;
-	char	*temp;
-	int		i;
-
-	i = 0;
-	while (paths[i])
-	{
-		temp = ft_strjoin(paths[i], "/");
-		if (temp == NULL)
-			return (NULL);
-		command_path = ft_strjoin(temp, to_find);
-		free(temp);
-		if (command_path == NULL)
-			return (NULL);
-		if (access(command_path, F_OK) == 0)
-			return (command_path);
-		free(command_path);
-		i++;
-	}
-	return (NULL);
-}
 
 void	second_child(char **argv, char **envp, t_pipex px)
 {
@@ -94,7 +63,7 @@ int	main(int argc, char **argv, char **envp)
 
 	initialise_px(&px);
 	if (argc != 5)
-		error_exit("Invalid input", ERR_ARGS, &px);
+		error_exit("Input", ERR_ARGS, &px);
 	if (pipe(px.fd) == -1)
 		error_exit("Pipe", strerror(errno), &px);
 	px.paths = ft_split(get_path(envp), ':');
