@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 11:21:17 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/10 23:13:56 by natallia         ###   ########.fr       */
+/*   Updated: 2024/12/11 12:34:11 by nkhamich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 # define PIPEX_H
 
 # include "libft/libft.h"
-# include <unistd.h> // for open, close, read, write, dup, dup2, access, fork, pipe, unlink
-# include <fcntl.h> // for open flags
-# include <stdlib.h> // for mallocs and exit
-# include <stdio.h> // for perror()
-# include <string.h> // for strerror()
-# include <sys/types.h> // for pid_t
-# include <sys/wait.h> // for wait, waitpid
-# include <errno.h> // for errno
+# include <unistd.h>
+# include <fcntl.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include <string.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <errno.h>
 
 # define ERR_ARGS "Usage: ./pipex <file1> <cmd1> <cmd2> <file2>"
 # define ERR_MALLOC "Failed to allocate memory."
@@ -39,7 +39,8 @@ typedef struct s_pipex
 	int		outfile;
 }	t_pipex;
 
-char	*get_path(char **envp);
-char	*get_command(char **paths, char	*to_find);
+void	initialise_px(t_pipex *px);
+void	free_double_array(char **str);
+void	error_exit(char *context, char *error_msg, t_pipex *px);
 
 #endif

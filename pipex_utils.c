@@ -3,49 +3,59 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:22:47 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/10 23:17:02 by natallia         ###   ########.fr       */
+/*   Updated: 2024/12/11 12:30:31 by nkhamich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	cleanup(t_pipex px)
+void	initialise_px(t_pipex *px)
 {
-	// cleanup (close pipe, free cmd_paths)
-	// make files be closed by children?
+	px->fd[0] = -1;
+	px->fd[1] = -1;
+	px->pid1 = -1;
+	px->pid2 = -1;
+	px->infile = -1;
+	px->outfile = -1;
+	px->paths = NULL;
+	px->command_args = NULL;
+	px->command_path = NULL;
 }
 
-char	*get_path(char **envp)
+void	free_double_array(char **str)
 {
-	while (ft_strncmp(*envp, "PATH", 4))
-		envp++;
-	return (*envp + 5);
-}
-
-char	*get_command(char **paths, char	*to_find)
-{
-	char	*command_path;
-	char	*temp;
 	int		i;
 
 	i = 0;
-	while (paths[i])
+	if (str)
 	{
-		temp = ft_strjoin(paths[i], "/");
-		if (temp == NULL)
-			return (NULL);
-		command_path = ft_strjoin(temp, to_find);
-		free(temp);
-		if (command_path == NULL)
-			return (NULL);
-		if (access(command_path, F_OK) == 0)
-			return (command_path);
-		free(command_path);
-		i++;
+		while (str[i])
+			free(str[i++]);
+		free(str);
 	}
-	return (NULL);
 }
 
+void	error_exit(char *context, char *error_msg, t_pipex *px)
+{
+	if (px->fd[0] >= 0)
+		close(px->fd[0]);
+	if (px->fd[1] >= 0)
+		close(px->fd[1]);
+	if (px->paths)
+		free_double_array(px->paths);
+	if (px->command_args)
+		free_double_array(px->command_args);
+	if (px->command_path)
+		free(px->command_path);
+	if (px->infile >= 0)
+		close(px->infile);
+	if (px->outfile >= 0)
+		close(px->outfile);
+	ft_putstr_fd(context, 2);
+	ft_putstr_fd(" error: ", 2);
+	ft_putendl_fd(error_msg, 2);
+	exit(EXIT_FAILURE);
+}
