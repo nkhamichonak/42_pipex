@@ -3,22 +3,22 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+         #
+#    By: natallia <natallia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/20 13:03:26 by nkhamich          #+#    #+#              #
-#    Updated: 2024/12/11 12:27:34 by nkhamich         ###   ########.fr        #
+#    Updated: 2024/12/12 14:03:03 by natallia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= pipex
-# NAME_BONUS	= checker
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -g
 SRC			= pipex.c pipex_utils.c
-# SRC_BONUS	= 
+SRC_BONUS	= bonus/main_bonus.c bonus/files_bonus.c \
+				bonus/children_bonus.c bonus/utils_bonus.c
 OBJ_DIR		= obj
 OBJ			= $(SRC:%.c=$(OBJ_DIR)/%.o)
-# OBJ_BONUS	= $(filter-out $(OBJ_DIR)/main.o, $(OBJ)) $(SRC_BONUS:%.c=$(OBJ_DIR)/%.o)
+OBJ_BONUS	= $(SRC_BONUS:%.c=$(OBJ_DIR)/%.o)
 
 LIBFT_PATH = ./libft
 LIBFT = $(LIBFT_PATH)/libft.a
@@ -40,11 +40,9 @@ $(NAME): $(OBJ) $(LIBFT)
 $(LIBFT):
 	@make -C $(LIBFT_PATH) all
 
-# bonus: $(NAME_BONUS)
-
-# $(NAME_BONUS): $(OBJ_BONUS) $(LIBFT)
-# 	@$(CC) $(CFLAGS) $(OBJ_BONUS) $(LIBFT) -o $(NAME_BONUS)
-# 	@echo "$(NAME_BONUS) executable created successfully."
+bonus: $(OBJ_BONUS) $(LIBFT)
+	@$(CC) $(CFLAGS) $(OBJ_BONUS) $(LIBFT) -o $(NAME)
+	@echo "$(NAME) bonus executable created successfully."
 
 clean:
 	@make -C $(LIBFT_PATH) clean
@@ -54,7 +52,7 @@ clean:
 fclean: clean
 	@make -C $(LIBFT_PATH) fclean
 	@rm -rf $(NAME)
-	@echo "Executables fully cleaned."
+	@echo "Executable fully cleaned."
 
 re: fclean all
 

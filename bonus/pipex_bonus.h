@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 12:57:34 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/11 15:26:48 by nkhamich         ###   ########.fr       */
+/*   Updated: 2024/12/12 13:01:41 by natallia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,25 +27,29 @@
 					"Usage: ./pipex here_doc LIMITER <cmd> <cmd1> <file>"
 # define ERR_MALLOC "Failed to allocate memory."
 # define ERR_CMD "Command not found."
+# define ERR_LINE "Nothing to read."
 
 typedef struct s_pipex
 {
-	int		fd[2];
-	pid_t	pid1;
-	pid_t	pid2;
-	char	**paths;
-	char	**command_args;
-	char	*command_path;
 	int		infile;
 	int		outfile;
 	int		here_doc;
+	int		command_count;
+	int		command_index;
+	char	**paths;
+	char	**command_args;
+	char	*command_path;
 }	t_pipex;
 
 void	initialise_px(t_pipex *px);
+int		min_arg_count(char *arg, t_pipex *px);
 char	*get_path(char **envp);
-char	*get_command(char **paths, char	*to_find);
 void	free_double_array(char **str);
 void	error_exit(char *context, char *error_msg, t_pipex *px);
+
+char	*get_command(char **paths, char	*to_find);
+
+void	get_files(int ac, char **argv, t_pipex *px);
 
 #endif
 

@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 11:23:08 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/11 15:26:02 by nkhamich         ###   ########.fr       */
+/*   Updated: 2024/12/12 11:55:49 by natallia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-#include <stdio.h>
 
 void	second_child(char **argv, char **envp, t_pipex px)
 {
@@ -32,8 +31,8 @@ void	second_child(char **argv, char **envp, t_pipex px)
 	px.command_path = get_command(px.paths, px.command_args[0]);
 	if (px.command_path == NULL)
 		error_exit("Command path", ERR_CMD, &px);
-	if (execve(px.command_path, px.command_args, envp) == -1)
-		error_exit("Execve", strerror(errno), &px);
+	execve(px.command_path, px.command_args, envp);
+	error_exit("Execve", strerror(errno), &px);
 }
 
 void	first_child(char **argv, char **envp, t_pipex px)
@@ -53,8 +52,8 @@ void	first_child(char **argv, char **envp, t_pipex px)
 	px.command_path = get_command(px.paths, px.command_args[0]);
 	if (px.command_path == NULL)
 		error_exit("Command path", ERR_CMD, &px);
-	if (execve(px.command_path, px.command_args, envp) == -1)
-		error_exit("Execve", strerror(errno), &px);
+	execve(px.command_path, px.command_args, envp);
+	error_exit("Execve", strerror(errno), &px);
 }
 
 int	main(int argc, char **argv, char **envp)
