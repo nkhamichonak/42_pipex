@@ -6,7 +6,7 @@
 /*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 11:31:13 by natallia          #+#    #+#             */
-/*   Updated: 2024/12/12 14:03:06 by natallia         ###   ########.fr       */
+/*   Updated: 2024/12/12 16:43:30 by natallia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,3 @@ char	*get_command(char **paths, char	*to_find)
 	}
 	return (NULL);
 }
-

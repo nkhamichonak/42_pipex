@@ -6,7 +6,7 @@
 /*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 12:57:34 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/12 13:01:41 by natallia         ###   ########.fr       */
+/*   Updated: 2024/12/12 16:43:20 by natallia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,7 @@
 # include <sys/wait.h>
 # include <errno.h>
 
-# define ERR_ARGS "Usage: ./pipex <file1> <cmd1> <cmd2> ... <cmdn> <file2>/n" \
-					"Usage: ./pipex here_doc LIMITER <cmd> <cmd1> <file>"
+# define ERR_ARGS "Invalid argument count."
 # define ERR_MALLOC "Failed to allocate memory."
 # define ERR_CMD "Command not found."
 # define ERR_LINE "Nothing to read."
@@ -52,4 +51,3 @@ char	*get_command(char **paths, char	*to_find);
 void	get_files(int ac, char **argv, t_pipex *px);
 
 #endif
-
