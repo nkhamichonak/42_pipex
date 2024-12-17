@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 12:59:20 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/12 13:04:14 by natallia         ###   ########.fr       */
+/*   Updated: 2024/12/17 12:02:17 by nkhamich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,9 @@ void	error_exit(char *context, char *error_msg, t_pipex *px)
 		free_double_array(px->command_args);
 	if (px->command_path)
 		free(px->command_path);
-	ft_putstr_fd(context, 1);
-	ft_putstr_fd(" error: ", 1);
-	ft_putendl_fd(error_msg, 2);
+	ft_putstr_fd("zsh: ", 2);
+	ft_putstr_fd(error_msg, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd(context, 2);
 	exit(EXIT_FAILURE);
 }

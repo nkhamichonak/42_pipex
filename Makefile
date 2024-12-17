@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: natallia <natallia@student.42.fr>          +#+  +:+       +#+         #
+#    By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/20 13:03:26 by nkhamich          #+#    #+#              #
-#    Updated: 2024/12/12 14:03:03 by natallia         ###   ########.fr        #
+#    Updated: 2024/12/17 15:21:29 by nkhamich         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,8 @@ OBJ_BONUS	= $(SRC_BONUS:%.c=$(OBJ_DIR)/%.o)
 
 LIBFT_PATH = ./libft
 LIBFT = $(LIBFT_PATH)/libft.a
+
+BONUS_FLAG  = .bonus_done
 
 all: $(NAME)
 
@@ -40,13 +42,16 @@ $(NAME): $(OBJ) $(LIBFT)
 $(LIBFT):
 	@make -C $(LIBFT_PATH) all
 
-bonus: $(OBJ_BONUS) $(LIBFT)
+bonus: $(BONUS_FLAG)
+
+$(BONUS_FLAG): $(OBJ_BONUS) $(LIBFT)
 	@$(CC) $(CFLAGS) $(OBJ_BONUS) $(LIBFT) -o $(NAME)
+	@touch $(BONUS_FLAG)
 	@echo "$(NAME) bonus executable created successfully."
 
 clean:
 	@make -C $(LIBFT_PATH) clean
-	@rm -rf $(OBJ_DIR)
+	@rm -rf $(OBJ_DIR) $(BONUS_FLAG)
 	@echo "Object files cleaned for $(NAME)."
 
 fclean: clean

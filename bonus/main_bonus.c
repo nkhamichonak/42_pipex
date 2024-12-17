@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 12:55:06 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/12 16:01:46 by natallia         ###   ########.fr       */
+/*   Updated: 2024/12/17 17:14:20 by nkhamich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,16 @@ void	child_process(char **argv, char **envp, t_pipex px, int *fd)
 	is_last = (px.command_count == 1);
 	argv_index = 2 + px.here_doc + px.command_index;
 	if (!is_last && dup2(fd[1], STDOUT_FILENO) == -1)
-		error_exit("1Dup", strerror(errno), &px);
+		error_exit("Dup", strerror(errno), &px);
 	else if (is_last && dup2(px.outfile, STDOUT_FILENO) == -1)
-		error_exit("1Dup", strerror(errno), &px);
+		error_exit("Dup", strerror(errno), &px);
 	close(fd[1]);
 	px.command_args = ft_split(argv[argv_index], ' ');
 	if (px.command_args == NULL)
 		error_exit("Command args", ERR_MALLOC, &px);
 	px.command_path = get_command(px.paths, px.command_args[0]);
 	if (px.command_path == NULL)
-		error_exit("Command path", ERR_CMD, &px);
+		error_exit(argv[argv_index], ERR_CMD, &px);
 	execve(px.command_path, px.command_args, envp);
 	error_exit("Execve", strerror(errno), &px);
 }
@@ -66,7 +66,7 @@ int	main(int argc, char **argv, char **envp)
 
 	initialise_px(&px);
 	if (argc < min_arg_count(argv[1], &px))
-		error_exit("Input", ERR_ARGS, &px);
+		error_exit("Check usage", ERR_ARGS, &px);
 	get_files(argc, argv, &px);
 	px.command_count = argc - 3 - px.here_doc;
 	px.paths = ft_split(get_path(envp), ':');

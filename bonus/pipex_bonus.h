@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 12:57:34 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/12 16:43:20 by natallia         ###   ########.fr       */
+/*   Updated: 2024/12/17 12:11:18 by nkhamich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@
 # include <sys/wait.h>
 # include <errno.h>
 
-# define ERR_ARGS "Invalid argument count."
-# define ERR_MALLOC "Failed to allocate memory."
-# define ERR_CMD "Command not found."
-# define ERR_LINE "Nothing to read."
+# define ERR_ARGS "Invalid argument count"
+# define ERR_MALLOC "Failed to allocate memory"
+# define ERR_CMD "Command not found"
+# define ERR_LINE "Nothing to read"
 
 typedef struct s_pipex
 {

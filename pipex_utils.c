@@ -6,7 +6,7 @@
 /*   By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:22:47 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/11 15:26:03 by nkhamich         ###   ########.fr       */
+/*   Updated: 2024/12/17 17:15:16 by nkhamich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	initialise_px(t_pipex *px)
 	px->paths = NULL;
 	px->command_args = NULL;
 	px->command_path = NULL;
+	px->child_one_status = 0;
+	px->child_two_status = 0;
 }
 
 char	*get_path(char **envp)
@@ -32,7 +34,7 @@ char	*get_path(char **envp)
 	return (*envp + 5);
 }
 
-char	*get_command(char **paths, char	*to_find)
+char	*get_command(char **paths, char	*to_find, t_pipex *px)
 {
 	char	*command_path;
 	char	*temp;
@@ -43,11 +45,11 @@ char	*get_command(char **paths, char	*to_find)
 	{
 		temp = ft_strjoin(paths[i], "/");
 		if (temp == NULL)
-			return (NULL);
+			error_exit("Command path temp", ERR_MALLOC, px);
 		command_path = ft_strjoin(temp, to_find);
 		free(temp);
 		if (command_path == NULL)
-			return (NULL);
+			error_exit("Command path", ERR_MALLOC, px);
 		if (access(command_path, F_OK) == 0)
 			return (command_path);
 		free(command_path);
@@ -85,8 +87,9 @@ void	error_exit(char *context, char *error_msg, t_pipex *px)
 		close(px->infile);
 	if (px->outfile >= 0)
 		close(px->outfile);
-	ft_putstr_fd(context, 1);
-	ft_putstr_fd(" error: ", 1);
-	ft_putendl_fd(error_msg, 2);
+	ft_putstr_fd("zsh: ", 2);
+	ft_putstr_fd(error_msg, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd(context, 2);
 	exit(EXIT_FAILURE);
 }
