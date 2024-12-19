@@ -3,16 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 11:23:08 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/17 17:47:56 by nkhamich         ###   ########.fr       */
+/*   Updated: 2024/12/19 09:40:30 by natallia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	second_child(char **argv, char **envp, t_pipex px)
+static int	wait_for_children(t_pipex *px)
+{
+	waitpid(px->pid1, &px->child_one_status, 0);
+	waitpid(px->pid2, &px->child_two_status, 0);
+	if (WIFEXITED(px->child_one_status) && WEXITSTATUS(px->child_one_status))
+		return (WEXITSTATUS(px->child_one_status));
+	if (WIFEXITED(px->child_two_status) && WEXITSTATUS(px->child_two_status))
+		return (WEXITSTATUS(px->child_two_status));
+	return (0);
+}
+
+static void	second_child(char **argv, char **envp, t_pipex px)
 {
 	int		outfile;
 
@@ -22,7 +33,7 @@ void	second_child(char **argv, char **envp, t_pipex px)
 	close(px.fd[1]);
 	if (dup2(px.fd[0], STDIN_FILENO) == -1)
 		error_exit("Second child dup", strerror(errno), &px);
-	// close(px.fd[0]);
+	close(px.fd[0]);
 	if (dup2(outfile, STDOUT_FILENO) == -1)
 		error_exit("Second child dup", strerror(errno), &px);
 	close(outfile);
@@ -36,7 +47,7 @@ void	second_child(char **argv, char **envp, t_pipex px)
 	error_exit("Execve", strerror(errno), &px);
 }
 
-void	first_child(char **argv, char **envp, t_pipex px)
+static void	first_child(char **argv, char **envp, t_pipex px)
 {
 	px.infile = open(argv[1], O_RDONLY);
 	if (px.infile < 0)
@@ -47,7 +58,7 @@ void	first_child(char **argv, char **envp, t_pipex px)
 	close(px.infile);
 	if (dup2(px.fd[1], STDOUT_FILENO) == -1)
 		error_exit("First child dup", strerror(errno), &px);
-	// close(px.fd[1]);
+	close(px.fd[1]);
 	px.command_args = ft_split(argv[2], ' ');
 	if (px.command_args == NULL)
 		error_exit("Command args", ERR_MALLOC, &px);
@@ -56,17 +67,6 @@ void	first_child(char **argv, char **envp, t_pipex px)
 		error_exit(argv[2], ERR_CMD, &px);
 	execve(px.command_path, px.command_args, envp);
 	error_exit("Execve", strerror(errno), &px);
-}
-
-int	wait_for_children(t_pipex *px)
-{
-	waitpid(px->pid1, &px->child_one_status, 0);
-	if (WIFEXITED(px->child_one_status) && WEXITSTATUS(px->child_one_status))
-		return (WEXITSTATUS(px->child_one_status));
-	waitpid(px->pid2, &px->child_two_status, 0);
-	if (WIFEXITED(px->child_two_status) && WEXITSTATUS(px->child_two_status))
-		return (WEXITSTATUS(px->child_two_status));
-	return (0);
 }
 
 int	main(int argc, char **argv, char **envp)

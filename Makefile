@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+         #
+#    By: natallia <natallia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/20 13:03:26 by nkhamich          #+#    #+#              #
-#    Updated: 2024/12/17 15:21:29 by nkhamich         ###   ########.fr        #
+#    Updated: 2024/12/18 21:02:38 by natallia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -g
 SRC			= pipex.c pipex_utils.c
 SRC_BONUS	= bonus/main_bonus.c bonus/files_bonus.c \
-				bonus/children_bonus.c bonus/utils_bonus.c
+				bonus/utils_bonus.c
 OBJ_DIR		= obj
 OBJ			= $(SRC:%.c=$(OBJ_DIR)/%.o)
 OBJ_BONUS	= $(SRC_BONUS:%.c=$(OBJ_DIR)/%.o)

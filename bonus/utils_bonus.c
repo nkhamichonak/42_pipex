@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 12:59:20 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/17 12:02:17 by nkhamich         ###   ########.fr       */
+/*   Updated: 2024/12/18 20:49:39 by natallia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	initialise_px(t_pipex *px)
 	px->paths = NULL;
 	px->command_args = NULL;
 	px->command_path = NULL;
+	px->child_status = 0;
 }
 
 int	min_arg_count(char *arg, t_pipex *px)

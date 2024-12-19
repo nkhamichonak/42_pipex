@@ -3,16 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 12:55:06 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/17 17:14:20 by nkhamich         ###   ########.fr       */
+/*   Updated: 2024/12/18 21:02:28 by natallia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	child_process(char **argv, char **envp, t_pipex px, int *fd)
+static char	*get_command(char **paths, char	*to_find)
+{
+	char	*command_path;
+	char	*temp;
+	int		i;
+
+	i = 0;
+	while (paths[i])
+	{
+		temp = ft_strjoin(paths[i], "/");
+		if (temp == NULL)
+			return (NULL);
+		command_path = ft_strjoin(temp, to_find);
+		free(temp);
+		if (command_path == NULL)
+			return (NULL);
+		if (access(command_path, F_OK) == 0)
+			return (command_path);
+		free(command_path);
+		i++;
+	}
+	return (NULL);
+}
+
+static void	child_process(char **argv, char **envp, t_pipex px, int *fd)
 {
 	bool	is_last;
 	int		argv_index;
@@ -35,7 +59,7 @@ void	child_process(char **argv, char **envp, t_pipex px, int *fd)
 	error_exit("Execve", strerror(errno), &px);
 }
 
-void	handle_pipeline(char **argv, char **envp, t_pipex *px)
+static void	handle_pipeline(char **argv, char **envp, t_pipex *px)
 {
 	bool	is_last;
 	int		fd[2];
@@ -56,7 +80,9 @@ void	handle_pipeline(char **argv, char **envp, t_pipex *px)
 			error_exit("Dup", strerror(errno), px);
 		close(fd[0]);
 		px->command_count--;
-		wait(NULL);
+		waitpid(pid, &px->child_status, 0);
+		if (px->child_status != 0)
+			return (free_double_array(px->paths), px->child_status);
 	}
 }
 
@@ -66,7 +92,12 @@ int	main(int argc, char **argv, char **envp)
 
 	initialise_px(&px);
 	if (argc < min_arg_count(argv[1], &px))
-		error_exit("Check usage", ERR_ARGS, &px);
+	{
+		if (px.here_doc)
+			error_exit("./pipex here_doc LIMITER cmd cmd1 file", ERR_ARG, &px);
+		else
+			error_exit("./pipex file1 cmd1 cmd2 ... cmdn file2", ERR_ARG, &px);
+	}
 	get_files(argc, argv, &px);
 	px.command_count = argc - 3 - px.here_doc;
 	px.paths = ft_split(get_path(envp), ':');
