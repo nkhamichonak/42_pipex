@@ -6,7 +6,7 @@
 /*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 12:57:34 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/18 20:49:27 by natallia         ###   ########.fr       */
+/*   Updated: 2024/12/19 17:54:30 by natallia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ typedef struct s_pipex
 	char	**command_args;
 	char	*command_path;
 	int		child_status;
+	bool	should_display_error;
+	int		error_code;
 }	t_pipex;
 
 void	initialise_px(t_pipex *px);
@@ -46,7 +48,7 @@ int		min_arg_count(char *arg, t_pipex *px);
 char	*get_path(char **envp);
 void	free_double_array(char **str);
 void	error_exit(char *context, char *error_msg, t_pipex *px);
-char	*get_command(char **paths, char	*to_find);
 void	get_files(int ac, char **argv, t_pipex *px);
+char	**custom_split(char const *s, char c);
 
 #endif

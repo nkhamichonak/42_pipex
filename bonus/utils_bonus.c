@@ -6,7 +6,7 @@
 /*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 12:59:20 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/18 20:49:39 by natallia         ###   ########.fr       */
+/*   Updated: 2024/12/19 15:43:54 by natallia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	initialise_px(t_pipex *px)
 	px->command_args = NULL;
 	px->command_path = NULL;
 	px->child_status = 0;
+	px->should_display_error = true;
+	px->error_code = 1;
 }
 
 int	min_arg_count(char *arg, t_pipex *px)
@@ -76,5 +78,8 @@ void	error_exit(char *context, char *error_msg, t_pipex *px)
 	ft_putstr_fd(error_msg, 2);
 	ft_putstr_fd(": ", 2);
 	ft_putendl_fd(context, 2);
-	exit(EXIT_FAILURE);
+	if (px->should_display_error)
+		exit(px->error_code);
+	else
+		exit(EXIT_SUCCESS);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   files_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 20:14:09 by natallia          #+#    #+#             */
-/*   Updated: 2024/12/17 12:05:51 by nkhamich         ###   ########.fr       */
+/*   Updated: 2024/12/19 18:20:23 by natallia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ void	get_files(int ac, char **argv, t_pipex *px)
 		px->outfile = open(argv[ac - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (px->outfile == -1)
 		error_exit(argv[ac - 1], strerror(errno), px);
+	px->should_display_error = false;
 	if (!px->here_doc)
 	{
 		px->infile = open(argv[1], O_RDONLY);

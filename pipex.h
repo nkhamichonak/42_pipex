@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 11:21:17 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/17 16:28:32 by nkhamich         ###   ########.fr       */
+/*   Updated: 2024/12/19 16:20:50 by natallia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ typedef struct s_pipex
 	int		outfile;
 	int		child_one_status;
 	int		child_two_status;
+	bool	should_display_error;
+	int		error_code;
 }	t_pipex;
 
 void	initialise_px(t_pipex *px);
@@ -46,5 +48,6 @@ char	*get_path(char **envp);
 char	*get_command(char **paths, char	*to_find, t_pipex *px);
 void	free_double_array(char **str);
 void	error_exit(char *context, char *error_msg, t_pipex *px);
+char	**custom_split(char const *s, char c);
 
 #endif

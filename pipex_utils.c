@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkhamich <nkhamich@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:22:47 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/17 17:15:16 by nkhamich         ###   ########.fr       */
+/*   Updated: 2024/12/19 15:47:47 by natallia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	initialise_px(t_pipex *px)
 	px->command_path = NULL;
 	px->child_one_status = 0;
 	px->child_two_status = 0;
+	px->should_display_error = true;
+	px->error_code = 1;
 }
 
 char	*get_path(char **envp)
@@ -40,8 +42,14 @@ char	*get_command(char **paths, char	*to_find, t_pipex *px)
 	char	*temp;
 	int		i;
 
-	i = 0;
-	while (paths[i])
+	if (ft_strchr(to_find, '/') != NULL)
+	{
+		if (access(to_find, F_OK) == 0)
+			return (ft_strdup(to_find));
+		return (NULL);
+	}
+	i = -1;
+	while (paths[++i])
 	{
 		temp = ft_strjoin(paths[i], "/");
 		if (temp == NULL)
@@ -53,7 +61,6 @@ char	*get_command(char **paths, char	*to_find, t_pipex *px)
 		if (access(command_path, F_OK) == 0)
 			return (command_path);
 		free(command_path);
-		i++;
 	}
 	return (NULL);
 }
@@ -91,5 +98,8 @@ void	error_exit(char *context, char *error_msg, t_pipex *px)
 	ft_putstr_fd(error_msg, 2);
 	ft_putstr_fd(": ", 2);
 	ft_putendl_fd(context, 2);
-	exit(EXIT_FAILURE);
+	if (px->should_display_error)
+		exit(px->error_code);
+	else
+		exit(EXIT_SUCCESS);
 }

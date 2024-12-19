@@ -6,7 +6,7 @@
 /*   By: natallia <natallia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 11:23:08 by nkhamich          #+#    #+#             */
-/*   Updated: 2024/12/19 09:40:30 by natallia         ###   ########.fr       */
+/*   Updated: 2024/12/19 17:06:28 by natallia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ static void	second_child(char **argv, char **envp, t_pipex px)
 {
 	int		outfile;
 
+	px.should_display_error = true;
 	outfile = open(argv[4], O_TRUNC | O_CREAT | O_RDWR, 0644);
 	if (outfile < 0)
 		error_exit(argv[4], strerror(errno), &px);
@@ -37,18 +38,22 @@ static void	second_child(char **argv, char **envp, t_pipex px)
 	if (dup2(outfile, STDOUT_FILENO) == -1)
 		error_exit("Second child dup", strerror(errno), &px);
 	close(outfile);
-	px.command_args = ft_split(argv[3], ' ');
+	px.command_args = custom_split(argv[3], ' ');
 	if (px.command_args == NULL)
 		error_exit("Command args", ERR_MALLOC, &px);
 	px.command_path = get_command(px.paths, px.command_args[0], &px);
 	if (px.command_path == NULL)
+	{
+		px.error_code = 127;
 		error_exit(argv[3], ERR_CMD, &px);
+	}
 	execve(px.command_path, px.command_args, envp);
 	error_exit("Execve", strerror(errno), &px);
 }
 
 static void	first_child(char **argv, char **envp, t_pipex px)
 {
+	px.should_display_error = false;
 	px.infile = open(argv[1], O_RDONLY);
 	if (px.infile < 0)
 		error_exit(argv[1], strerror(errno), &px);
@@ -59,7 +64,7 @@ static void	first_child(char **argv, char **envp, t_pipex px)
 	if (dup2(px.fd[1], STDOUT_FILENO) == -1)
 		error_exit("First child dup", strerror(errno), &px);
 	close(px.fd[1]);
-	px.command_args = ft_split(argv[2], ' ');
+	px.command_args = custom_split(argv[2], ' ');
 	if (px.command_args == NULL)
 		error_exit("Command args", ERR_MALLOC, &px);
 	px.command_path = get_command(px.paths, px.command_args[0], &px);

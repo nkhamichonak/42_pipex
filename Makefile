@@ -6,16 +6,16 @@
 #    By: natallia <natallia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/20 13:03:26 by nkhamich          #+#    #+#              #
-#    Updated: 2024/12/18 21:02:38 by natallia         ###   ########.fr        #
+#    Updated: 2024/12/19 16:17:12 by natallia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= pipex
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -g
-SRC			= pipex.c pipex_utils.c
+SRC			= pipex.c pipex_utils.c custom_split.c
 SRC_BONUS	= bonus/main_bonus.c bonus/files_bonus.c \
-				bonus/utils_bonus.c
+				bonus/utils_bonus.c custom_split.c
 OBJ_DIR		= obj
 OBJ			= $(SRC:%.c=$(OBJ_DIR)/%.o)
 OBJ_BONUS	= $(SRC_BONUS:%.c=$(OBJ_DIR)/%.o)
