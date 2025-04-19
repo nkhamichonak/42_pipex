@@ -44,7 +44,7 @@ The result of the final command will be written to the specified output file. If
 The bonus part of `pipex` supports multiple commands, replicating the shell behaviour of:
 
 ```
-< infile command1 command2 ... commandN > outfile
+< infile command1 | command2 | ... | commandN > outfile
 ```
 
 It also handles heredocs (`<<`), prompting the user for input and feeding it into the first command.
